@@ -27,7 +27,7 @@ class Dictionary:
                 else:
                     hash_key = 0
 
-        if self.__len__() > self.capacity * self.load_factor:
+        if len(self) > self.capacity * self.load_factor:
             self.resize()
 
     def __getitem__(self, key: Any) -> Any:
