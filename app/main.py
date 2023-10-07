@@ -21,11 +21,7 @@ class Dictionary:
             if self.hash_table[hash_key] is None:
                 self.hash_table[hash_key] = [key, value]
                 break
-            else:
-                if hash_key < self.capacity - 1:
-                    hash_key += 1
-                else:
-                    hash_key = 0
+            hash_key = (hash_key + 1) % self.capacity
 
         if len(self) > self.capacity * self.load_factor:
             self.resize()
@@ -55,11 +51,7 @@ class Dictionary:
                     if hash_table2[hash_key2] is None:
                         hash_table2[hash_key2] = [elem[0], elem[1]]
                         break
-                    else:
-                        if hash_key2 < self.capacity - 1:
-                            hash_key2 += 1
-                        else:
-                            hash_key2 = 0
+                    hash_key2 = (hash_key2 + 1) % self.capacity
 
         self.hash_table = hash_table2
         self.capacity = capacity2
