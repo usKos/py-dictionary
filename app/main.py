@@ -26,16 +26,11 @@ class Dictionary:
             self.resize()
 
     def __getitem__(self, key: Any) -> Any:
-        hash_key = hash(key) % self.capacity
-        while True:
 
-            if self.hash_table[hash_key]:
-                if self.hash_table[hash_key][0] == key:
-                    return self.hash_table[hash_key][1]
-                else:
-                    hash_key = (hash_key + 1) % self.capacity
-            else:
-                break
+        for i in range(len(self.hash_table)):
+            if self.hash_table[i] is not None:
+                if self.hash_table[i][0] == key:
+                    return self.hash_table[i][1]
 
         raise KeyError(f"Invalid key {key}")
 
