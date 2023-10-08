@@ -2,6 +2,7 @@ from typing import Any
 
 
 class Dictionary:
+
     def __init__(self, capacity: int = 8, load_factor: float = 2 / 3) -> None:
         self.capacity = capacity
         self.load_factor = load_factor
@@ -9,6 +10,7 @@ class Dictionary:
 
     def __setitem__(self, key: Any, value: Any) -> None:
         hash_key = hash(key) % self.capacity
+
         while True:
             if self.hash_table[hash_key] is not None:
                 if self.hash_table[hash_key][0] == key:
@@ -25,15 +27,15 @@ class Dictionary:
 
     def __getitem__(self, key: Any) -> Any:
         hash_key = hash(key) % self.capacity
-        loop = True
-        while loop:
-            if self.hash_table[hash_key] is not None:
+        while True:
+
+            if self.hash_table[hash_key]:
                 if self.hash_table[hash_key][0] == key:
                     return self.hash_table[hash_key][1]
                 else:
                     hash_key = (hash_key + 1) % self.capacity
-
-            loop = False
+            else:
+                break
 
         raise KeyError(f"Invalid key {key}")
 
