@@ -32,11 +32,8 @@ class Dictionary:
                     return self.hash_table[hash_key][1]
                 else:
                     hash_key = (hash_key + 1) % self.capacity
-            else:
-                if hash_key == hash(key) % self.capacity:
-                    return
-                else:
-                    loop = False
+
+            loop = False
 
         raise KeyError(f"Invalid key {key}")
 
