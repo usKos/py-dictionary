@@ -27,15 +27,12 @@ class Dictionary:
 
     def __getitem__(self, key: Any) -> Any:
         hash_key = hash(key) % self.capacity
-        self.lenght = len(self)
-        i = 0
-        while i < self.lenght:
+
+        for i in range(len(self.hash_table)):
             h = (hash_key + i) % self.capacity
             if self.hash_table[h] is not None:
                 if self.hash_table[h][0] == key:
                     return self.hash_table[h][1]
-
-            i += 1
 
         raise KeyError(f"Invalid key: {key}")
 
@@ -43,17 +40,17 @@ class Dictionary:
         return len([elem for elem in self.hash_table if elem])
 
     def resize(self) -> None:
-        capacity2 = 2 * self.capacity
-        hash_table2 = [None] * capacity2
+        capacity_new = 2 * self.capacity
+        hash_table_new = [None] * capacity_new
 
         for elem in self.hash_table:
             if elem is not None:
-                hash_key2 = hash(elem[0]) % capacity2
+                hash_key2 = hash(elem[0]) % capacity_new
                 while True:
-                    if hash_table2[hash_key2] is None:
-                        hash_table2[hash_key2] = [elem[0], elem[1]]
+                    if hash_table_new[hash_key2] is None:
+                        hash_table_new[hash_key2] = [elem[0], elem[1]]
                         break
                     hash_key2 = (hash_key2 + 1) % self.capacity
 
-        self.hash_table = hash_table2
-        self.capacity = capacity2
+        self.hash_table = hash_table_new
+        self.capacity = capacity_new
