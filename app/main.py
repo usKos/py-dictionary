@@ -16,23 +16,25 @@ class Dictionary:
                 if self.hash_table[hash_key][0] == key:
                     self.hash_table[hash_key][1] = value
                     break
-                else:
-                    hash_key = (hash_key + 1) % self.capacity
-            else:
+            elif self.hash_table[hash_key] is None:
                 self.hash_table[hash_key] = [key, value]
                 break
+
+            hash_key = (hash_key + 1) % self.capacity
 
         if len(self) > self.capacity * self.load_factor:
             self.resize()
 
     def __getitem__(self, key: Any) -> Any:
+        hash_key = hash(key) % self.capacity
 
         for i in range(len(self.hash_table)):
-            if self.hash_table[i] is not None:
-                if self.hash_table[i][0] == key:
-                    return self.hash_table[i][1]
+            h = (hash_key + i) % self.capacity
+            if self.hash_table[h] is not None:
+                if self.hash_table[h][0] == key:
+                    return self.hash_table[h][1]
 
-        raise KeyError(f"Invalid key {key}")
+        raise KeyError(f"Invalid key: {key}")
 
     def __len__(self) -> int:
         return len([elem for elem in self.hash_table if elem])
@@ -48,8 +50,7 @@ class Dictionary:
                     if hash_table2[hash_key2] is None:
                         hash_table2[hash_key2] = [elem[0], elem[1]]
                         break
-                    else:
-                        hash_key2 = (hash_key2 + 1) % self.capacity
+                    hash_key2 = (hash_key2 + 1) % self.capacity
 
         self.hash_table = hash_table2
         self.capacity = capacity2
