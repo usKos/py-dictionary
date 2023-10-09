@@ -27,12 +27,15 @@ class Dictionary:
 
     def __getitem__(self, key: Any) -> Any:
         hash_key = hash(key) % self.capacity
+        i = 0
+        while i < len(self):
+            for i in range(len(self.hash_table)):
+                h = (hash_key + i) % self.capacity
+                if self.hash_table[h] is not None:
+                    if self.hash_table[h][0] == key:
+                        return self.hash_table[h][1]
 
-        for i in range(len(self.hash_table)):
-            h = (hash_key + i) % self.capacity
-            if self.hash_table[h] is not None:
-                if self.hash_table[h][0] == key:
-                    return self.hash_table[h][1]
+            i += 1
 
         raise KeyError(f"Invalid key: {key}")
 
