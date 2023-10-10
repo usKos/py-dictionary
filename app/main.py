@@ -9,30 +9,36 @@ class Dictionary:
         self.hash_table: list = [None] * capacity
 
     def __setitem__(self, key: Any, value: Any) -> None:
-        hash_key = hash(key) % self.capacity
+        hash_key = hash(key)
+        index = hash_key % self.capacity
 
         while True:
-            if self.hash_table[hash_key] is not None:
-                if self.hash_table[hash_key][0] == key:
-                    self.hash_table[hash_key][1] = value
+            if self.hash_table[index] is not None:
+                if self.hash_table[index][0] == key and \
+                        self.hash_table[index][2] == hash_key:
+                    self.hash_table[index][1] = value
                     break
-            elif self.hash_table[hash_key] is None:
-                self.hash_table[hash_key] = [key, value]
+                else:
+                    index = (index + 1) % self.capacity
+            elif self.hash_table[index] is None:
+                self.hash_table[index] = [key, value, hash_key]
                 break
-
-            hash_key = (hash_key + 1) % self.capacity
 
         if len(self) > self.capacity * self.load_factor:
             self.resize()
 
     def __getitem__(self, key: Any) -> Any:
-        hash_key = hash(key) % self.capacity
+        hash_key = hash(key)
+        index = hash_key % self.capacity
+        i = 0
+        while i < len(self):
 
-        for i in range(len(self.hash_table)):
-            h = (hash_key + i) % self.capacity
-            if self.hash_table[h] is not None:
+            h = (index + i) % self.capacity
+            if self.hash_table[h]:
                 if self.hash_table[h][0] == key:
                     return self.hash_table[h][1]
+
+            i += 1
 
         raise KeyError(f"Invalid key: {key}")
 
@@ -43,14 +49,16 @@ class Dictionary:
         capacity_new = 2 * self.capacity
         hash_table_new = [None] * capacity_new
 
-        for elem in self.hash_table:
-            if elem is not None:
-                hash_key2 = hash(elem[0]) % capacity_new
+        for cell in self.hash_table:
+            if cell is not None:
+                index2 = hash(cell[0]) % capacity_new
+
                 while True:
-                    if hash_table_new[hash_key2] is None:
-                        hash_table_new[hash_key2] = [elem[0], elem[1]]
+                    if hash_table_new[index2] is None:
+                        hash_table_new[index2] = [cell[0], cell[1], cell[2]]
                         break
-                    hash_key2 = (hash_key2 + 1) % self.capacity
+
+                    index2 = (index2 + 1) % capacity_new
 
         self.hash_table = hash_table_new
         self.capacity = capacity_new
