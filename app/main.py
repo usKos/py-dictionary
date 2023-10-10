@@ -13,7 +13,7 @@ class Dictionary:
         index = hash_key % self.capacity
 
         while True:
-            if self.hash_table[index] is not None:
+            if self.hash_table[index]:
                 if self.hash_table[index][0] == key and \
                         self.hash_table[index][2] == hash_key:
                     self.hash_table[index][1] = value
@@ -37,6 +37,8 @@ class Dictionary:
             if self.hash_table[h]:
                 if self.hash_table[h][0] == key:
                     return self.hash_table[h][1]
+            else:
+                break
 
             i += 1
 
@@ -50,7 +52,7 @@ class Dictionary:
         hash_table_new = [None] * capacity_new
 
         for cell in self.hash_table:
-            if cell is not None:
+            if cell:
                 index2 = hash(cell[0]) % capacity_new
 
                 while True:
