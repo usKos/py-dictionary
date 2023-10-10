@@ -30,22 +30,23 @@ class Dictionary:
     def __getitem__(self, key: Any) -> Any:
         hash_key = hash(key)
         index = hash_key % self.capacity
-        i = 0
-        while i < len(self):
-
-            h = (index + i) % self.capacity
-            if self.hash_table[h]:
-                if self.hash_table[h][0] == key:
-                    return self.hash_table[h][1]
+        while True:
+            if self.hash_table[index]:
+                if self.hash_table[index][0] == key and \
+                        self.hash_table[index][2] == hash_key:
+                    return self.hash_table[index][1]
+                else:
+                    index = (index + 1) % self.capacity
             else:
                 break
-
-            i += 1
 
         raise KeyError(f"Invalid key: {key}")
 
     def __len__(self) -> int:
         return len([elem for elem in self.hash_table if elem])
+
+    def _hash(self, key: Any) -> int:
+        return hash(key)
 
     def resize(self) -> None:
         capacity_new = 2 * self.capacity
