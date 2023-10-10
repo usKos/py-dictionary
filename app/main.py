@@ -18,11 +18,12 @@ class Dictionary:
                         self.hash_table[index][2] == hash_key:
                     self.hash_table[index][1] = value
                     break
-                else:
-                    index = (index + 1) % self.capacity
+
             elif self.hash_table[index] is None:
                 self.hash_table[index] = [key, value, hash_key]
                 break
+
+            index = (index + 1) % self.capacity
 
         if len(self) > self.capacity * self.load_factor:
             self.resize()
@@ -35,18 +36,15 @@ class Dictionary:
                 if self.hash_table[index][0] == key and \
                         self.hash_table[index][2] == hash_key:
                     return self.hash_table[index][1]
-                else:
-                    index = (index + 1) % self.capacity
             else:
                 break
+
+            index = (index + 1) % self.capacity
 
         raise KeyError(f"Invalid key: {key}")
 
     def __len__(self) -> int:
         return len([elem for elem in self.hash_table if elem])
-
-    def _hash(self, key: Any) -> int:
-        return hash(key)
 
     def resize(self) -> None:
         capacity_new = 2 * self.capacity
